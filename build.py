@@ -2,6 +2,18 @@
 from jinja2 import Environment, FileSystemLoader
 from yaml import load 
 from datetime import datetime, timezone
+from git import Repo
+import os
+import sys
+
+repo_path = os.path.dirname(os.path.realpath(__file__))
+repo = Repo( repo_path )
+
+changedFiles = [ item.a_path for item in repo.index.diff(None) ]
+
+if len(changedFiles) > 0:
+  print("There are changed files; please commit and run build.py again")
+  sys.exit(1)
 
 env = Environment(
   loader=FileSystemLoader('.'))
